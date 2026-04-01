@@ -2,7 +2,7 @@
 // Handles OpenRouter + KLIPY API calls, sends GIF results to content script
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct:free";
+const OPENROUTER_MODEL = "google/gemini-2.5-flash-lite";
 
 const KLIPY_FALLBACK_KEY = ""; // Set your KLIPY partner key here
 const KLIPY_DEFAULT_ENDPOINT = "https://api.klipy.co";
