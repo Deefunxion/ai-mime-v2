@@ -173,13 +173,17 @@
     healthCheckWarned = false;
 
     // v2: Send to background.js instead of WebSocket
-    chrome.runtime.sendMessage({
-      type: "ai-message",
-      source: site.name,
-      content: fullText.slice(0, 2000),
-      timestamp: Date.now(),
-    });
-    console.log("[AI-MIME] Sent from", site.name, "(" + fullText.length + " chars)");
+    try {
+      chrome.runtime.sendMessage({
+        type: "ai-message",
+        source: site.name,
+        content: fullText.slice(0, 2000),
+        timestamp: Date.now(),
+      });
+      console.log("[AI-MIME] Sent from", site.name, "(" + fullText.length + " chars)");
+    } catch (err) {
+      console.warn("[AI-MIME] Extension context lost:", err.message);
+    }
   }
 
   const observer = new MutationObserver(() => {

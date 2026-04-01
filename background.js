@@ -312,11 +312,15 @@ async function handleAiMessage(message, tabId) {
 
     if (gifs.length > 0) {
       // Step 3: Send GIFs + limit status to content script
-      chrome.tabs.sendMessage(tabId, {
-        type: "show-gifs",
-        gifs: gifs,
-        limited: limited,
-      });
+      try {
+        chrome.tabs.sendMessage(tabId, {
+          type: "show-gifs",
+          gifs: gifs,
+          limited: limited,
+        });
+      } catch (err) {
+        console.warn("[AI-MIME] Tab no longer available:", err);
+      }
     }
   } catch (err) {
     console.error("[AI-MIME] Pipeline failed:", err);
