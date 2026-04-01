@@ -25,8 +25,13 @@ When ChatGPT explains a code bug, you see "this is fine" dog. When Claude apolog
 - Works on **Claude**, **ChatGPT**, **Gemini**, **Grok**, **DeepSeek**
 - **15 free AI-powered reactions/day** (Chrome Web Store version)
 - Keyword fallback when no API key — still works, just less precise
-- **Draggable** overlay — move it anywhere on the page
+- **Draggable** overlay — move it anywhere, position is remembered
+- **Resizable** — Small / Medium / Large from settings
 - **Closeable** — click X to hide
+- **Quick mute** — toggle on/off from the popup without opening settings
+- **Reaction delay** — 0-2 second delay before reacting
+- **Status indicators** — green/red dots show API connection status
+- **Daily counter** — see how many free reactions you've used today
 - GIF sequences loop with dynamic timing
 - Powered by KLIPY with source links
 
@@ -34,9 +39,13 @@ When ChatGPT explains a code bug, you see "this is fine" dog. When Claude apolog
 
 Click the AI-MIME extension icon to open settings:
 
+- **GIF Reactions toggle** — quick mute/unmute at the top
+- **Daily counter** — shows free reactions used today
+- **Status dots** — OpenRouter and KLIPY connection status
 - **OpenRouter API Key** — add your free key for unlimited AI-powered reactions
 - **KLIPY API Key** — optional, has a default
-- **Enabled** — toggle on/off
+- **Overlay size** — Small / Medium / Large (applies immediately)
+- **Reaction delay** — 0-2 seconds slider
 
 Get a free OpenRouter key at [openrouter.ai/keys](https://openrouter.ai/keys)
 
@@ -53,7 +62,7 @@ Full privacy policy: [privacy-policy.md](privacy-policy.md)
 ## Tech Stack
 
 - Chrome Extension Manifest V3
-- OpenRouter API (LLM for GIF search term generation)
+- OpenRouter API (Gemini 2.5 Flash Lite for GIF search term generation)
 - KLIPY API (GIF search)
 - Vanilla JavaScript (no build step, no frameworks)
 
