@@ -12,6 +12,7 @@
   flex-direction: column;
   cursor: grab;
   user-select: none;
+  -webkit-user-drag: none;
   transition: transform 0.2s ease;
 }
 
@@ -27,6 +28,8 @@
   background: #111;
   border-radius: 16px 16px 0 0;
   transition: opacity 0.3s ease;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 
 #ai-mime-bottom {

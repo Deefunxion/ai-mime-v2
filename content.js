@@ -215,6 +215,7 @@
 
     gifImgEl = document.createElement("img");
     gifImgEl.id = "ai-mime-gif";
+    gifImgEl.draggable = false;
 
     titleEl = document.createElement("a");
     titleEl.id = "ai-mime-title";
