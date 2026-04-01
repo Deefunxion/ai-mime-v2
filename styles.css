@@ -23,7 +23,8 @@
   width: 100%;
   flex: 1;
   min-height: 0;
-  object-fit: cover;
+  object-fit: contain;
+  background: #111;
   border-radius: 16px 16px 0 0;
   transition: opacity 0.3s ease;
 }
