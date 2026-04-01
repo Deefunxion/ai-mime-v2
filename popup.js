@@ -62,19 +62,22 @@ document.getElementById("enabled").addEventListener("change", (e) => {
   chrome.storage.sync.set({ enabled });
 });
 
-// --- Size selector ---
+// --- Size selector (applies immediately) ---
 document.querySelectorAll(".size-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
     currentSize = btn.dataset.size;
     document.querySelectorAll(".size-btn").forEach((b) =>
       b.classList.toggle("active", b.dataset.size === currentSize)
     );
+    // Apply immediately — don't wait for Save
+    chrome.storage.sync.set({ overlaySize: currentSize });
   });
 });
 
-// --- Delay slider ---
+// --- Delay slider (applies immediately) ---
 document.getElementById("reactionDelay").addEventListener("input", (e) => {
   document.getElementById("delayVal").textContent = e.target.value + "s";
+  chrome.storage.sync.set({ reactionDelay: parseFloat(e.target.value) });
 });
 
 // --- Save ---
