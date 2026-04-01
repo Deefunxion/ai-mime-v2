@@ -1,0 +1,113 @@
+/* AI-MIME GIF Overlay */
+#ai-mime-overlay {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 280px;
+  height: 280px;
+  z-index: 2147483647;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  background: #1a1a2e;
+  display: none;
+  flex-direction: column;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+
+#ai-mime-overlay:hover {
+  transform: scale(1.02);
+}
+
+#ai-mime-gif {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  object-fit: cover;
+  border-radius: 16px 16px 0 0;
+  transition: opacity 0.3s ease;
+}
+
+#ai-mime-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px 6px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+#ai-mime-title {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+#ai-mime-title:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+#ai-mime-powered {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 8px;
+  text-decoration: none;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+#ai-mime-powered:hover {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#ai-mime-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+#ai-mime-overlay:hover #ai-mime-close {
+  opacity: 1;
+}
+
+#ai-mime-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+}
+
+#ai-mime-nudge {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 6px 10px;
+  background: rgba(167, 139, 250, 0.9);
+  color: white;
+  font-size: 11px;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#ai-mime-nudge-link {
+  color: white;
+  font-weight: bold;
+  text-decoration: underline;
+}
