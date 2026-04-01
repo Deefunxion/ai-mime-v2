@@ -208,6 +208,11 @@
     overlayEl = document.createElement("div");
     overlayEl.id = "ai-mime-overlay";
 
+    // Apply saved size
+    chrome.storage.sync.get({ overlaySize: "medium" }, (s) => {
+      overlayEl.className = "size-" + (s.overlaySize || "medium");
+    });
+
     gifImgEl = document.createElement("img");
     gifImgEl.id = "ai-mime-gif";
 
@@ -267,8 +272,25 @@
     });
 
     document.addEventListener("mouseup", () => {
+      if (isDragging && overlayEl) {
+        const rect = overlayEl.getBoundingClientRect();
+        chrome.storage.local.set({
+          overlayLeft: Math.round(rect.left),
+          overlayTop: Math.round(rect.top),
+        });
+      }
       isDragging = false;
       if (overlayEl) overlayEl.style.cursor = "grab";
+    });
+
+    // Restore saved position
+    chrome.storage.local.get({ overlayLeft: null, overlayTop: null }, (pos) => {
+      if (pos.overlayLeft !== null && pos.overlayTop !== null) {
+        overlayEl.style.right = "auto";
+        overlayEl.style.bottom = "auto";
+        overlayEl.style.left = pos.overlayLeft + "px";
+        overlayEl.style.top = pos.overlayTop + "px";
+      }
     });
 
     document.body.appendChild(overlayEl);
@@ -321,6 +343,18 @@
       playSequence(message.gifs);
       if (nudgeEl) {
         nudgeEl.style.display = message.limited ? "block" : "none";
+      }
+    }
+  });
+
+  // Listen for settings changes (size, mute from popup)
+  chrome.storage.onChanged.addListener((changes) => {
+    if (changes.overlaySize && overlayEl) {
+      overlayEl.className = "size-" + changes.overlaySize.newValue;
+    }
+    if (changes.enabled) {
+      if (!changes.enabled.newValue && overlayEl) {
+        overlayEl.style.display = "none";
       }
     }
   });

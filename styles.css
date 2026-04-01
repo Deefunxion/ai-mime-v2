@@ -3,8 +3,6 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 280px;
-  height: 280px;
   z-index: 2147483647;
   border-radius: 16px;
   overflow: hidden;
@@ -110,4 +108,18 @@
   color: white;
   font-weight: bold;
   text-decoration: underline;
+}
+
+/* Overlay sizes */
+#ai-mime-overlay.size-small {
+  width: 200px;
+  height: 200px;
+}
+#ai-mime-overlay.size-medium {
+  width: 280px;
+  height: 280px;
+}
+#ai-mime-overlay.size-large {
+  width: 380px;
+  height: 380px;
 }

@@ -13,6 +13,8 @@ const SETTINGS_DEFAULTS = {
   klipyKey: "",
   klipyEndpoint: KLIPY_DEFAULT_ENDPOINT,
   enabled: true,
+  overlaySize: "medium",
+  reactionDelay: 0,
 };
 
 // --- Daily Limit ---
@@ -60,6 +62,42 @@ async function getSettings() {
   } catch {
     return SETTINGS_DEFAULTS;
   }
+}
+
+async function checkApiStatus(openrouterKey, klipyKey) {
+  const result = { openrouter: "unknown", klipy: "unknown" };
+
+  const orKey = openrouterKey || SHARED_OPENROUTER_KEY;
+  if (orKey) {
+    try {
+      const res = await fetch("https://openrouter.ai/api/v1/models", {
+        headers: { "Authorization": `Bearer ${orKey}` },
+        signal: AbortSignal.timeout(5000),
+      });
+      result.openrouter = res.ok ? "ok" : "error";
+    } catch {
+      result.openrouter = "error";
+    }
+  } else {
+    result.openrouter = "no-key";
+  }
+
+  const kKey = (klipyKey && klipyKey.length > 10) ? klipyKey : KLIPY_FALLBACK_KEY;
+  if (kKey) {
+    try {
+      const res = await fetch(`${KLIPY_DEFAULT_ENDPOINT}/api/v1/${kKey}/gifs/search?q=test&per_page=1`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      const json = await res.json();
+      result.klipy = json.result ? "ok" : "error";
+    } catch {
+      result.klipy = "error";
+    }
+  } else {
+    result.klipy = "no-key";
+  }
+
+  return result;
 }
 
 // --- Smart Truncation ---
@@ -226,6 +264,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     getSettings().then(sendResponse);
     return true;
   }
+  if (message.type === "get-daily-count") {
+    getDailyCount().then((count) => sendResponse({ count, limit: DAILY_FREE_LIMIT }));
+    return true;
+  }
+  if (message.type === "check-status") {
+    checkApiStatus(message.openrouterKey, message.klipyKey).then(sendResponse);
+    return true;
+  }
 });
 
 async function handleAiMessage(message, tabId) {
@@ -233,6 +279,11 @@ async function handleAiMessage(message, tabId) {
 
   const settings = await getSettings();
   if (!settings.enabled) return;
+
+  // Apply reaction delay
+  if (settings.reactionDelay > 0) {
+    await new Promise((r) => setTimeout(r, settings.reactionDelay * 1000));
+  }
 
   let limited = false;
 

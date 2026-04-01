@@ -4,14 +4,103 @@
   <meta charset="utf-8">
   <style>
     body {
-      width: 320px;
+      width: 340px;
       padding: 16px;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
       background: #1a1a2e;
       color: #e0e0e0;
       margin: 0;
     }
-    h1 { font-size: 16px; margin: 0 0 12px; color: #a78bfa; }
+    h1 { font-size: 16px; margin: 0 0 4px; color: #a78bfa; }
+
+    /* Mute button */
+    .mute-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 10px 0;
+      padding: 10px 14px;
+      background: #2a2a3e;
+      border-radius: 10px;
+    }
+    .mute-bar .label { font-size: 14px; font-weight: 600; }
+    .mute-bar .state { font-size: 12px; color: #888; }
+    .mute-toggle {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      cursor: pointer;
+    }
+    .mute-toggle input { opacity: 0; width: 0; height: 0; }
+    .mute-slider {
+      position: absolute;
+      inset: 0;
+      background: #444;
+      border-radius: 26px;
+      transition: background 0.2s;
+    }
+    .mute-slider::before {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+    .mute-toggle input:checked + .mute-slider {
+      background: #a78bfa;
+    }
+    .mute-toggle input:checked + .mute-slider::before {
+      transform: translateX(22px);
+    }
+
+    /* Daily counter */
+    .counter {
+      text-align: center;
+      padding: 8px;
+      background: #2a2a3e;
+      border-radius: 8px;
+      margin: 8px 0;
+      font-size: 12px;
+      color: #888;
+    }
+    .counter .num { color: #a78bfa; font-weight: 700; font-size: 14px; }
+
+    /* Status dots */
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #888;
+      margin: 4px 0;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #555;
+      flex-shrink: 0;
+    }
+    .dot.ok { background: #4ade80; }
+    .dot.err { background: #f87171; }
+    .dot.checking { background: #facc15; animation: pulse 1s infinite; }
+    @keyframes pulse { 50% { opacity: 0.4; } }
+
+    /* Section */
+    .section { margin: 12px 0 0; }
+    .section-title {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0 0 6px;
+    }
+
+    /* Inputs */
     label { display: block; font-size: 12px; color: #888; margin: 8px 0 4px; }
     input[type="text"], input[type="password"] {
       width: 100%;
@@ -24,12 +113,45 @@
       box-sizing: border-box;
     }
     input:focus { outline: none; border-color: #a78bfa; }
-    .toggle { display: flex; align-items: center; gap: 8px; margin: 12px 0; }
-    .toggle input { width: auto; }
-    .status { font-size: 11px; color: #666; margin-top: 12px; }
-    .status.ok { color: #4ade80; }
-    .status.err { color: #f87171; }
-    button {
+
+    /* Size selector */
+    .size-selector {
+      display: flex;
+      gap: 6px;
+      margin: 4px 0;
+    }
+    .size-btn {
+      flex: 1;
+      padding: 6px;
+      border: 1px solid #444;
+      border-radius: 6px;
+      background: #2a2a3e;
+      color: #888;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+    }
+    .size-btn.active {
+      border-color: #a78bfa;
+      color: #a78bfa;
+      background: #2a2a4e;
+    }
+
+    /* Slider */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
+    }
+    .slider-row input[type="range"] {
+      flex: 1;
+      accent-color: #a78bfa;
+    }
+    .slider-val { font-size: 12px; color: #a78bfa; min-width: 28px; text-align: right; }
+
+    /* Save button */
+    .save-btn {
       width: 100%;
       padding: 8px;
       border: none;
@@ -40,32 +162,70 @@
       cursor: pointer;
       margin-top: 12px;
     }
-    button:hover { background: #8b5cf6; }
-    .footer { font-size: 10px; color: #555; margin-top: 12px; text-align: center; }
+    .save-btn:hover { background: #8b5cf6; }
+
+    .save-status { font-size: 11px; color: #666; margin-top: 6px; text-align: center; }
+    .save-status.ok { color: #4ade80; }
+
+    .footer { font-size: 10px; color: #555; margin-top: 10px; text-align: center; }
     .footer a { color: #a78bfa; text-decoration: none; }
   </style>
 </head>
 <body>
-  <h1>🎭 AI-MIME Settings</h1>
+  <h1>🎭 AI-MIME</h1>
 
-  <div class="toggle">
-    <input type="checkbox" id="enabled" checked>
-    <label for="enabled" style="margin:0; color:#e0e0e0">Enabled</label>
+  <!-- Quick mute toggle -->
+  <div class="mute-bar">
+    <div>
+      <div class="label">GIF Reactions</div>
+      <div class="state" id="muteState">Active</div>
+    </div>
+    <label class="mute-toggle">
+      <input type="checkbox" id="enabled" checked>
+      <span class="mute-slider"></span>
+    </label>
   </div>
 
-  <label>OpenRouter API Key</label>
-  <input type="password" id="openrouterKey" placeholder="sk-or-...">
+  <!-- Daily counter -->
+  <div class="counter" id="counterBar">
+    <span class="num" id="countUsed">&ndash;</span> / <span id="countLimit">15</span> free reactions today
+  </div>
 
-  <label>KLIPY API Key (optional — has default)</label>
-  <input type="password" id="klipyKey" placeholder="Leave empty for default">
+  <!-- Status indicators -->
+  <div class="status-row"><span class="dot checking" id="dotOpenrouter"></span> OpenRouter <span id="statusOpenrouter">checking...</span></div>
+  <div class="status-row"><span class="dot checking" id="dotKlipy"></span> KLIPY <span id="statusKlipy">checking...</span></div>
 
-  <button id="save">Save</button>
+  <!-- API Keys -->
+  <div class="section">
+    <div class="section-title">API Keys</div>
+    <label>OpenRouter Key</label>
+    <input type="password" id="openrouterKey" placeholder="sk-or-...">
+    <label>KLIPY Key (optional)</label>
+    <input type="password" id="klipyKey" placeholder="Leave empty for default">
+  </div>
 
-  <div id="status" class="status"></div>
+  <!-- Overlay settings -->
+  <div class="section">
+    <div class="section-title">Overlay</div>
+    <label>Size</label>
+    <div class="size-selector">
+      <div class="size-btn" data-size="small">S</div>
+      <div class="size-btn active" data-size="medium">M</div>
+      <div class="size-btn" data-size="large">L</div>
+    </div>
+    <label>Reaction delay</label>
+    <div class="slider-row">
+      <input type="range" id="reactionDelay" min="0" max="2" step="0.5" value="0">
+      <span class="slider-val" id="delayVal">0s</span>
+    </div>
+  </div>
+
+  <button class="save-btn" id="save">Save</button>
+  <div class="save-status" id="saveStatus"></div>
 
   <div class="footer">
-    <a href="https://openrouter.ai/keys" target="_blank">Get OpenRouter key</a> ·
-    <a href="https://github.com/Deefunxion/ai-mime" target="_blank">GitHub</a>
+    <a href="https://openrouter.ai/keys" target="_blank">Get free OpenRouter key</a> ·
+    <a href="https://github.com/Deefunxion/ai-mime-v2" target="_blank">GitHub</a>
   </div>
 
   <script src="popup.js"></script>
