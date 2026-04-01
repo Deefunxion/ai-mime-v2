@@ -2,75 +2,104 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      width: 340px;
-      padding: 16px;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #1a1a2e;
-      color: #e0e0e0;
+      width: 350px;
+      background: #131313;
+      color: #ccc;
+      font-family: 'Be Vietnam Pro', -apple-system, sans-serif;
       margin: 0;
+      padding: 0;
+      overflow-x: hidden;
     }
-    h1 { font-size: 16px; margin: 0 0 4px; color: #a78bfa; }
 
-    /* Mute button */
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .header img { width: 26px; height: 26px; opacity: 0.9; }
+    .header .title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #e8e8e8;
+      letter-spacing: -0.3px;
+    }
+    .header .ver {
+      margin-left: auto;
+      font-size: 10px;
+      color: #444;
+      font-weight: 500;
+    }
+
+    /* Mute bar */
     .mute-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 10px 0;
-      padding: 10px 14px;
-      background: #2a2a3e;
-      border-radius: 10px;
+      padding: 12px 16px;
+      background: #1a1a1a;
+      border-bottom: 1px solid #2a2a2a;
     }
-    .mute-bar .label { font-size: 14px; font-weight: 600; }
-    .mute-bar .state { font-size: 12px; color: #888; }
+    .mute-bar .m-label { font-size: 13px; font-weight: 700; color: #d0d0d0; }
+    .mute-bar .m-sub { font-size: 10px; color: #666; margin-top: 1px; }
     .mute-toggle {
       position: relative;
-      width: 48px;
-      height: 26px;
+      width: 44px;
+      height: 24px;
       cursor: pointer;
     }
     .mute-toggle input { opacity: 0; width: 0; height: 0; }
     .mute-slider {
       position: absolute;
       inset: 0;
-      background: #444;
-      border-radius: 26px;
+      background: #333;
+      border-radius: 12px;
       transition: background 0.2s;
     }
     .mute-slider::before {
       content: "";
       position: absolute;
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       left: 3px;
-      bottom: 3px;
-      background: white;
+      top: 3px;
+      background: #666;
       border-radius: 50%;
-      transition: transform 0.2s;
+      transition: all 0.2s;
     }
     .mute-toggle input:checked + .mute-slider {
-      background: #a78bfa;
+      background: #444;
     }
     .mute-toggle input:checked + .mute-slider::before {
-      transform: translateX(22px);
+      transform: translateX(20px);
+      background: #e0e0e0;
     }
 
-    /* Daily counter */
-    .counter {
-      text-align: center;
-      padding: 8px;
-      background: #2a2a3e;
-      border-radius: 8px;
-      margin: 8px 0;
-      font-size: 12px;
-      color: #888;
+    /* Info row */
+    .info-row {
+      display: flex;
+      border-bottom: 1px solid #2a2a2a;
     }
-    .counter .num { color: #a78bfa; font-weight: 700; font-size: 14px; }
-
-    /* Status dots */
-    .status-row {
+    .info-block {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 10px;
+      color: #666;
+    }
+    .info-block:first-child { border-right: 1px solid #2a2a2a; }
+    .info-block .num {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ccc;
+      line-height: 1.1;
+    }
+    .info-block .num span { color: #e8e8e8; }
+    .st-item {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -78,107 +107,146 @@
       color: #888;
       margin: 4px 0;
     }
-    .dot {
-      width: 8px;
-      height: 8px;
+    .st-d {
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #555;
       flex-shrink: 0;
     }
-    .dot.ok { background: #4ade80; }
-    .dot.err { background: #f87171; }
-    .dot.checking { background: #facc15; animation: pulse 1s infinite; }
+    .st-d.ok { background: #5a9a5a; }
+    .st-d.err { background: #9a5a5a; }
+    .st-d.checking { background: #8a8a3a; animation: pulse 1s infinite; }
     @keyframes pulse { 50% { opacity: 0.4; } }
 
-    /* Section */
-    .section { margin: 12px 0 0; }
-    .section-title {
-      font-size: 11px;
-      color: #666;
+    /* Sections */
+    .sec {
+      padding: 14px 16px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+    .sec:last-of-type { border-bottom: none; }
+    .sec-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: #555;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin: 0 0 6px;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
     }
 
     /* Inputs */
-    label { display: block; font-size: 12px; color: #888; margin: 8px 0 4px; }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: #777;
+      margin: 10px 0 4px;
+    }
     input[type="text"], input[type="password"] {
       width: 100%;
-      padding: 8px;
-      border: 1px solid #333;
-      border-radius: 6px;
-      background: #2a2a3e;
-      color: #e0e0e0;
-      font-size: 13px;
+      padding: 9px 10px;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      color: #ccc;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
       box-sizing: border-box;
     }
-    input:focus { outline: none; border-color: #a78bfa; }
+    input[type="text"]:focus, input[type="password"]:focus {
+      outline: none;
+      border-color: #888;
+    }
+    input::placeholder { color: #333; }
 
     /* Size selector */
-    .size-selector {
-      display: flex;
-      gap: 6px;
-      margin: 4px 0;
-    }
-    .size-btn {
+    .size-row { display: flex; gap: 4px; margin: 6px 0; }
+    .size-opt {
       flex: 1;
-      padding: 6px;
-      border: 1px solid #444;
-      border-radius: 6px;
-      background: #2a2a3e;
-      color: #888;
-      font-size: 12px;
-      cursor: pointer;
       text-align: center;
+      padding: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid #2a2a2a;
+      border-radius: 4px;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.15s;
     }
-    .size-btn.active {
-      border-color: #a78bfa;
-      color: #a78bfa;
-      background: #2a2a4e;
+    .size-opt.active {
+      background: #2a2a2a;
+      color: #e8e8e8;
+      border-color: #444;
     }
 
     /* Slider */
-    .slider-row {
+    .slider-wrap {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin: 4px 0;
+      gap: 10px;
+      margin: 8px 0;
     }
-    .slider-row input[type="range"] {
+    input[type="range"] {
       flex: 1;
-      accent-color: #a78bfa;
+      accent-color: #999;
     }
-    .slider-val { font-size: 12px; color: #a78bfa; min-width: 28px; text-align: right; }
+    .s-val {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: #aaa;
+      min-width: 28px;
+      text-align: right;
+    }
 
     /* Save button */
     .save-btn {
+      display: block;
       width: 100%;
-      padding: 8px;
+      padding: 12px;
+      background: #2a2a2a;
       border: none;
-      border-radius: 6px;
-      background: #a78bfa;
-      color: white;
+      color: #ddd;
+      font-family: 'Be Vietnam Pro', sans-serif;
       font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
-      margin-top: 12px;
+      border-top: 1px solid #2a2a2a;
+      transition: all 0.15s;
     }
-    .save-btn:hover { background: #8b5cf6; }
+    .save-btn:hover { background: #3a3a3a; color: #fff; }
 
-    .save-status { font-size: 11px; color: #666; margin-top: 6px; text-align: center; }
-    .save-status.ok { color: #4ade80; }
+    .save-status {
+      font-size: 11px;
+      color: #666;
+      margin-top: 4px;
+      text-align: center;
+      padding: 0 16px;
+    }
+    .save-status.ok { color: #5a9a5a; }
 
-    .footer { font-size: 10px; color: #555; margin-top: 10px; text-align: center; }
-    .footer a { color: #a78bfa; text-decoration: none; }
+    /* Footer */
+    .foot {
+      padding: 10px 16px;
+      border-top: 1px solid #2a2a2a;
+      text-align: center;
+      font-size: 10px;
+    }
+    .foot a { color: #555; text-decoration: none; }
+    .foot a:hover { color: #ccc; }
   </style>
 </head>
 <body>
-  <h1><img src="icon32.png" width="20" height="20" style="vertical-align: -3px; margin-right: 6px;">AI-MIME</h1>
+  <div class="header">
+    <img src="icon32.png" alt="AI-MIME">
+    <span class="title">AI-MIME</span>
+    <span class="ver">v2.0</span>
+  </div>
 
-  <!-- Quick mute toggle -->
   <div class="mute-bar">
     <div>
-      <div class="label">GIF Reactions</div>
-      <div class="state" id="muteState">Active</div>
+      <div class="m-label">GIF Reactions</div>
+      <div class="m-sub" id="muteState">Active</div>
     </div>
     <label class="mute-toggle">
       <input type="checkbox" id="enabled" checked>
@@ -186,45 +254,45 @@
     </label>
   </div>
 
-  <!-- Daily counter -->
-  <div class="counter" id="counterBar">
-    <span class="num" id="countUsed">&ndash;</span> / <span id="countLimit">15</span> free reactions today
+  <div class="info-row">
+    <div class="info-block">
+      <div class="num"><span id="countUsed">&ndash;</span>/<span id="countLimit">15</span></div>
+      reactions today
+    </div>
+    <div class="info-block">
+      <div class="st-item"><span class="st-d checking" id="dotOpenrouter"></span> <span id="statusOpenrouter">checking...</span></div>
+      <div class="st-item"><span class="st-d checking" id="dotKlipy"></span> <span id="statusKlipy">checking...</span></div>
+    </div>
   </div>
 
-  <!-- Status indicators -->
-  <div class="status-row"><span class="dot checking" id="dotOpenrouter"></span> OpenRouter <span id="statusOpenrouter">checking...</span></div>
-  <div class="status-row"><span class="dot checking" id="dotKlipy"></span> KLIPY <span id="statusKlipy">checking...</span></div>
-
-  <!-- API Keys -->
-  <div class="section">
-    <div class="section-title">API Keys</div>
-    <label>OpenRouter Key</label>
+  <div class="sec">
+    <div class="sec-title">API Keys</div>
+    <label>OpenRouter</label>
     <input type="password" id="openrouterKey" placeholder="sk-or-...">
-    <label>KLIPY Key (optional)</label>
-    <input type="password" id="klipyKey" placeholder="Leave empty for default">
+    <label>KLIPY (optional)</label>
+    <input type="password" id="klipyKey" placeholder="leave empty for default">
   </div>
 
-  <!-- Overlay settings -->
-  <div class="section">
-    <div class="section-title">Overlay</div>
+  <div class="sec">
+    <div class="sec-title">Overlay</div>
     <label>Size</label>
-    <div class="size-selector">
-      <div class="size-btn" data-size="small">S</div>
-      <div class="size-btn active" data-size="medium">M</div>
-      <div class="size-btn" data-size="large">L</div>
+    <div class="size-row">
+      <div class="size-opt" data-size="small">S</div>
+      <div class="size-opt active" data-size="medium">M</div>
+      <div class="size-opt" data-size="large">L</div>
     </div>
-    <label>Reaction delay</label>
-    <div class="slider-row">
+    <label>Reaction Delay</label>
+    <div class="slider-wrap">
       <input type="range" id="reactionDelay" min="0" max="2" step="0.5" value="0">
-      <span class="slider-val" id="delayVal">0s</span>
+      <span class="s-val" id="delayVal">0s</span>
     </div>
   </div>
 
-  <button class="save-btn" id="save">Save</button>
+  <button class="save-btn" id="save">Save Settings</button>
   <div class="save-status" id="saveStatus"></div>
 
-  <div class="footer">
-    <a href="https://openrouter.ai/keys" target="_blank">Get free OpenRouter key</a> ·
+  <div class="foot">
+    <a href="https://openrouter.ai/keys" target="_blank">Get OpenRouter key</a> ·
     <a href="https://github.com/Deefunxion/ai-mime-v2" target="_blank">GitHub</a>
   </div>
 

@@ -16,7 +16,7 @@ chrome.runtime.sendMessage({ type: "get-settings" }, (settings) => {
 
   // Size selector
   currentSize = settings.overlaySize || "medium";
-  document.querySelectorAll(".size-btn").forEach((btn) => {
+  document.querySelectorAll(".size-opt").forEach((btn) => {
     btn.classList.toggle("active", btn.dataset.size === currentSize);
   });
 
@@ -43,7 +43,7 @@ chrome.runtime.sendMessage({ type: "get-daily-count" }, (data) => {
 function setDot(dotId, textId, status) {
   const dot = document.getElementById(dotId);
   const text = document.getElementById(textId);
-  dot.className = "dot";
+  dot.className = "st-d";
   if (status === "ok") {
     dot.classList.add("ok");
     text.textContent = "connected";
@@ -63,10 +63,10 @@ document.getElementById("enabled").addEventListener("change", (e) => {
 });
 
 // --- Size selector (applies immediately) ---
-document.querySelectorAll(".size-btn").forEach((btn) => {
+document.querySelectorAll(".size-opt").forEach((btn) => {
   btn.addEventListener("click", () => {
     currentSize = btn.dataset.size;
-    document.querySelectorAll(".size-btn").forEach((b) =>
+    document.querySelectorAll(".size-opt").forEach((b) =>
       b.classList.toggle("active", b.dataset.size === currentSize)
     );
     // Apply immediately — don't wait for Save
