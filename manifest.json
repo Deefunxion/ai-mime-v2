@@ -8,8 +8,7 @@
   "permissions": ["storage"],
   "host_permissions": [
     "https://openrouter.ai/*",
-    "https://api.klipy.co/*",
-    "https://api.klipy.com/*"
+    "https://api.klipy.co/*"
   ],
   "action": {
     "default_popup": "popup.html",
